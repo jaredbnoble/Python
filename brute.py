@@ -24,5 +24,5 @@ for password in pFile:
                 print("[+] Password Found: %s" % password)
                 break;
         except smtplib.SMTPAuthenticationError:
-        		print("[!] Password Incorrect: %s" % password)
+        	print("[!] Password Incorrect: %s" % password)
 smtpserver.quit()
