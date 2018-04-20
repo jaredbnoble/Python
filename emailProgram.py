@@ -1,5 +1,5 @@
 #Author: Jared Noble 04/18/2018
-#Intention of this project is to create an email spoofing program that takes the input of what I want to spoof as, and specify a target address.
+#simple email service
 
 import smtplib
 import getpass
