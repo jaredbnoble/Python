@@ -1,6 +1,4 @@
-;;;
-Why is this incorrect?
-;;;
+#Why is this incorrect?
 def remove_dups(L1, L2):
 	for e in L1:
 		if e in L2:
@@ -15,9 +13,8 @@ print(L1)
 
 
 
-;;;
-Correct
-;;;
+#Correct
+
 def remove_dups_new(L1, L2):
 	L1_copy = L1[:]
 	for e in L1_copy:
