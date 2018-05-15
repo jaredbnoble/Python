@@ -23,6 +23,6 @@ def remove_dups_new(L1, L2):
 
 L1 = [1, 2, 3, 4]
 L2 = [1, 2, 5, 6]
-remove_dups(L1, L2)
+remove_dups_new(L1, L2)
 
 print(L1)
