@@ -1,5 +1,7 @@
 #title           :cvoSearch.py
 #description     :This script is used to look up outbound aliases from "PEEK" file
+#instructions    :Must pass "##CVA##," as argument for pattern match in script call
+#                :From powershell;; python cvoSearch.py "##CVA##,"
 #author          :Jared Noble
 #=================================================================================
 
