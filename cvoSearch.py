@@ -1,7 +1,7 @@
 #title           :cvoSearch.py
 #description     :This script is used to look up outbound aliases from "PEEK" file
 #instructions    :Must pass "##CVA##," as argument for pattern match in script call
-#                :From powershell;; python cvoSearch.py "##CVA##,"
+#                :From powershell--> python cvoSearch.py "##CVA##,"
 #author          :Jared Noble
 #=================================================================================
 
@@ -10,24 +10,24 @@ import sys
 import os 
 import string
  
-_INPUT_FILE = 'peek.txt'
-#_INPUT_FILE = 'C:\Users\JN050613\Desktop\peek.txt'
-_OUTPUT_FILE = 'peekoutput.txt'
-#_OUTPUT_FILE = "C:\\Users\Jared\Desktop\peekoutput1.txt"
+_INPUT_FILE = 'peek.txt' #Reading from directory you are calling this program from
+_OUTPUT_FILE = 'peekoutput.txt' #Writing to directory you are calling this program from
+
+#Optional - Uncomment these lines to specify a working path. Must follow format 'C:\\Users\<Your USER ID>\Desktop\peek.txt'
+#_INPUT_FILE = input("Specify working path to read from: ")
+#_OUTPUT_FILE = input("Specify working path to write to: ")
  
 def main():
-
 #regex search pattern and match parms
   pattern = re.compile('^(.*)' + re.escape(sys.argv[1]) + '(.*)$')
-  o = open(_OUTPUT_FILE, 'w')
-  with open(_INPUT_FILE) as f:
-    for line in f:
+  openOut = open(_OUTPUT_FILE, 'w')
+  with open(_INPUT_FILE) as readIn:
+    for line in readIn:
       match = pattern.match(line)
       if match is not None:
       #suppress group 1 if you want code values only/2 for nothing useful
-        o.write(match.group(1) + match.group(2) + os.linesep)
-  o.close()
-
+        openOut.write(match.group(1) + match.group(2) + os.linesep)
+  openOut.close()
 
 if __name__ == '__main__':
   main()
@@ -46,27 +46,30 @@ for eachLine in tempFile:
         if char.isdigit():
             # if truly a number add it to the tmpStr
             tmpStr += char
-            # if a comma is identified and tmpStr has a 
-            # value then append it to the numbers list
-        #elif char == ',' and tmpStr != '':
-            #numbers.append(int(tmpStr))
-            #tmpStr = ''
+        #if a comma is identified and tmpStr has a 
+        #value then append it to the numbers list
+        elif char == ',' and tmpStr != '':
+            numbers.append(int(tmpStr))
+            tmpStr = ''
     # if tmpStr contains a number add it to the numbers list
     if tmpStr.isdigit():
         numbers.append(int(tmpStr))
-# Output the number list
-#Insert select statement
-tempFile.write("select * from code_value_outbound where code_value in (")
+
+#Output the numbers list
+#Begin query
+tempFile.write("select * from code_value_outbound\nwhere code_value in (")
 for item in numbers:
-  tempFile.write("%s\n" % item + ",")
+  tempFile.write("%s\n" % item +",")
+tempFile.write("0") #false value, not harmful
 #Constraints for the query
 contrib = input("What is the contributor source? ")
-aliasVal = input("Alias value(enter for DONOTSEND): ")
+aliasVal = input("Alias value(enter for DONOTSEND, 'NULL' for all alias values): ")
 if aliasVal == "":
 	tempFile.write(")\nand alias = 'DONOTSEND'\nand contributor_source_cd = " + contrib )
+elif aliasVal == "NULL":
+  tempFile.write(")\nand alias !=NULL \nand contributor_source_cd = " + contrib )
 elif aliasVal != "DONOTSEND":
-	userInput = aliasVal
-	tempFile.write(")\nand alias = '" + userInput + "'\nand contributor_source_cd = " + contrib )
+	tempFile.write(")\nand alias = '" + aliasVal + "'\nand contributor_source_cd = " + contrib )
 else:
 	tempFile.write(")\nand alias = 'DONOTSEND'\nand contributor_source_cd = " + contrib )
 
